@@ -14,20 +14,42 @@
             <x-app-logo />
         </a>
 
-        <flux:navlist variant="outline">
-            <flux:navlist.group :heading="__('Platform')" class="grid">
-                <flux:navlist.item icon="home" :href="route('dashboard.index')"
-                    :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
+    <flux:navlist variant="outline">
+        <flux:navlist.group :heading="__('Platform')" class="grid">
+
+            {{-- Dashboard: lo ven todos los usuarios autenticados --}}
+            <flux:navlist.item icon="home" :href="route('dashboard.index')"
+                :current="request()->routeIs('dashboard')" wire:navigate>
+                {{ __('Dashboard') }}
+            </flux:navlist.item>
+
+            {{-- Users: solo ADMIN --}}
+            @can('viewAny', App\Models\User::class)
                 <flux:navlist.item icon="users" :href="route('dashboard.users.index')"
-                    :current="request()->routeIs('users.*')" wire:navigate>{{ __('Users') }}</flux:navlist.item>
+                    :current="request()->routeIs('users.*')" wire:navigate>
+                    {{ __('Users') }}
+                </flux:navlist.item>
+            @endcan
+
+            {{-- Categories: admin + supervisor --}}
+            @can('viewAny', App\Models\Category::class)
                 <flux:navlist.item icon="folder" :href="route('dashboard.categories.index')"
-                    :current="request()->routeIs('categories.*')" wire:navigate>{{ __('Categories') }}
+                    :current="request()->routeIs('categories.*')" wire:navigate>
+                    {{ __('Categories') }}
                 </flux:navlist.item>
+            @endcan
+
+            {{-- News: admin + supervisor + editor --}}
+            @can('viewAny', App\Models\News::class)
                 <flux:navlist.item icon="newspaper" :href="route('dashboard.news.index')"
-                    :current="request()->routeIs('news.*')" wire:navigate>{{ __('News') }}
+                    :current="request()->routeIs('news.*')" wire:navigate>
+                    {{ __('News') }}
                 </flux:navlist.item>
-            </flux:navlist.group>
-        </flux:navlist>
+            @endcan
+
+        </flux:navlist.group>
+    </flux:navlist>
+
 
         <flux:spacer />
 
@@ -135,9 +157,12 @@
         </flux:dropdown>
     </flux:header>
 
+    
     {{ $slot }}
 
+    @livewireScripts
     @fluxScripts
+    
 </body>
 
 </html>

@@ -1,18 +1,46 @@
 <x-layouts.app :title="__('Dashboard')">
-    <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
-        <div class="grid auto-rows-min gap-4 md:grid-cols-3">
-            <div class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
-                <x-placeholder-pattern class="absolute inset-0 size-full stroke-gray-900/20 dark:stroke-neutral-100/20" />
+    <div class="p-6 space-y-6">
+
+        <h1 class="text-3xl font-bold mb-6">Dashboard</h1>
+
+        {{-- Estadísticas --}}
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+
+            <div class="p-4 bg-white dark:bg-neutral-900 shadow rounded-xl">
+                <p class="text-gray-500">Total Noticias</p>
+                <p class="text-3xl font-bold">{{ $newsCount }}</p>
             </div>
-            <div class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
-                <x-placeholder-pattern class="absolute inset-0 size-full stroke-gray-900/20 dark:stroke-neutral-100/20" />
+
+            <div class="p-4 bg-white dark:bg-neutral-900 shadow rounded-xl">
+                <p class="text-gray-500">Publicadas</p>
+                <p class="text-3xl font-bold">{{ $published }}</p>
             </div>
-            <div class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
-                <x-placeholder-pattern class="absolute inset-0 size-full stroke-gray-900/20 dark:stroke-neutral-100/20" />
+
+            <div class="p-4 bg-white dark:bg-neutral-900 shadow rounded-xl">
+                <p class="text-gray-500">Borradores</p>
+                <p class="text-3xl font-bold">{{ $drafts }}</p>
             </div>
+
+            <div class="p-4 bg-white dark:bg-neutral-900 shadow rounded-xl">
+                <p class="text-gray-500">Usuarios registrados</p>
+                <p class="text-3xl font-bold">{{ $usersCount }}</p>
+            </div>
+
         </div>
-        <div class="relative h-full flex-1 overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
-            <x-placeholder-pattern class="absolute inset-0 size-full stroke-gray-900/20 dark:stroke-neutral-100/20" />
+
+        {{-- Últimas noticias --}}
+        <div class="bg-white dark:bg-neutral-900 shadow rounded-xl p-6">
+            <h2 class="text-xl font-semibold mb-4">Últimas noticias</h2>
+
+            @foreach ($latestNews as $news)
+                <div class="py-2 border-b border-neutral-200 dark:border-neutral-700">
+                    <strong>{{ $news->title }}</strong>
+                    <span class="text-gray-500 text-sm">
+                        – {{ $news->created_at->diffForHumans() }}
+                    </span>
+                </div>
+            @endforeach
         </div>
+
     </div>
 </x-layouts.app>

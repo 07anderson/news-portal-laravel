@@ -109,17 +109,14 @@ class NewsManagement extends Component
 
         // Validate form data
         $this->validate([
-            'title' => 'required|string|max:255',
-            'paragraph' => 'required|string',
-            'author_id' => 'required|exists:users,id',
-            'category_id' => 'required|exists:categories,id',
-            'images' => 'required|array|min:3',
-            'images.*' => 'image|max:2048',
-        ], [
-            'images.min' => 'You must upload at least 3 images.',
-            'images.*.image' => 'Each file must be an image.',
-            'images.*.max' => 'Each image must not be larger than 2MB.',
-        ]);
+        'title' => 'required|string|max:255',
+        'paragraph' => 'required|string',
+        'author_id' => 'required|exists:users,id',
+        'category_id' => 'required|exists:categories,id',
+        'images' => 'nullable|array',
+        'images.*' => 'image|max:2048',
+    ]);
+
 
         // Store images
         $imagePaths = [];

@@ -12,15 +12,23 @@ class UpdateUserForm extends Form
     public string $name = '';
     public string $email = '';
     public string $role = 'regular';
-    public string|null $password = null;
+
+    public ?string $password = null;
+    public ?string $password_confirmation = null;
 
     public function rules()
     {
         return [
             'id' => 'required|exists:users,id',
             'name' => 'required|string|max:255',
-            'email' => ['required', 'email', Rule::unique('users', 'email')->ignore($this->id)],
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users', 'email')->ignore($this->id),
+            ],
             'role' => ['required', 'in:admin,supervisor,editor,regular'],
+
+            // La confirmación AHORA funcionará correctamente
             'password' => 'nullable|string|min:8|confirmed',
         ];
     }

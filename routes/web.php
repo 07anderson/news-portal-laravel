@@ -10,6 +10,9 @@ use App\Livewire\PublicHomepage;
 use App\Livewire\NewsCategory;
 use App\Livewire\NewsDetail;
 use Illuminate\Support\Facades\Route;
+use App\Models\News;
+use App\Models\User;
+use App\Models\Category;
 
 // Public routes
 Route::get('/', PublicHomepage::class)->name('home');
@@ -26,9 +29,16 @@ Route::get('settings/appearance', Appearance::class)->name('settings.appearance'
 // Dashboard routes (protected)
 Route::middleware(['auth', 'verified', 'dashboard'])->prefix('dashboard')->name('dashboard.')->group(function () {
 
-    Route::get('/', function () {
-        return view('dashboard');
-    })->name('index');
+Route::get('/', function () {
+    return view('dashboard', [
+        'newsCount' => News::count(),
+        'published' => News::where('is_published', true)->count(),
+        'drafts' => News::where('is_published', false)->count(),
+        'usersCount' => User::count(),
+        'categoriesCount' => Category::count(),
+        'latestNews' => News::latest()->take(5)->get(),
+    ]);
+})->name('index');
 
     // User Management
     Route::get('users', UserManagement::class)->name('users.index');
