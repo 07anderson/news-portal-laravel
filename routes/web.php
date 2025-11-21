@@ -1,5 +1,5 @@
 <?php
-
+use App\Livewire\CategoryShow;
 use App\Livewire\CategoryManagement;
 use App\Livewire\NewsManagement;
 use App\Livewire\Settings\Appearance;
@@ -15,6 +15,7 @@ use App\Models\User;
 use App\Models\Category;
 
 // Public routes
+Route::get('/category/{category:slug}', CategoryShow::class)->name('category.show');
 Route::get('/', PublicHomepage::class)->name('home');
 Route::get('/news/{news}', NewsDetail::class)->name('news.show');
 Route::get('/categories/{category}', NewsCategory::class)->name('categories.show');

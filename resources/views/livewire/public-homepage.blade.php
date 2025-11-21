@@ -31,9 +31,19 @@
 
     {{-- Latest News Section --}}
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Latest News</h2>
-            <p class="mt-4 text-lg text-gray-600 dark:text-gray-300">Stay informed with our most recent stories</p>
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-12">
+            <div>
+                <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Latest News</h2>
+                <p class="mt-4 text-lg text-gray-600 dark:text-gray-300">Stay informed with our most recent stories</p>
+            </div>
+            @if (request()->routeIs('categories.show'))
+                <div class="mt-6 sm:mt-0">
+                    <a href="{{ route('home') }}" wire:navigate
+                        class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors">
+                        ← Back to All News
+                    </a>
+                </div>
+            @endif
         </div>
 
         @if ($news->count() > 0)

@@ -12,6 +12,8 @@ class PublicHomepage extends Component
 {
     use WithPagination;
 
+    protected $paginationTheme = 'tailwind';
+
     public function render()
     {
         return view('livewire.public-homepage', [
