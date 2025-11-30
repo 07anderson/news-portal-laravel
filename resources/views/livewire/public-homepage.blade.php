@@ -46,6 +46,18 @@
             @endif
         </div>
 
+        {{-- Search Bar --}}
+        <div class="mb-8">
+            <input type="text" 
+                wire:model.live.debounce.300ms="search" 
+                placeholder="Search news by title..."
+                maxlength="50"
+                class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                {{ strlen($search) }}/50 caracteres
+            </p>
+        </div>
+
         @if ($news->count() > 0)
             <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             @foreach ($news as $item)
@@ -110,8 +122,20 @@
                         d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z">
                     </path>
                 </svg>
-                <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">No news available</h3>
-                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Check back later for the latest updates.</p>
+                <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">
+                    @if ($search)
+                        No news found matching "{{ $search }}"
+                    @else
+                        No news available
+                    @endif
+                </h3>
+                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                    @if ($search)
+                        Try a different search term or check back later.
+                    @else
+                        Check back later for the latest updates.
+                    @endif
+                </p>
             </div>
         @endif
     </div>

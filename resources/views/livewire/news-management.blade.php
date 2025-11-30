@@ -225,27 +225,51 @@
                                                     <div class="space-y-4">
                                                         <div>
                                                             <flux:label>{{ __('Current Images') }}</flux:label>
-                                                            <div class="mt-2 grid grid-cols-3 gap-2">
-                                                                @foreach ($updateNewsForm->existing_images as $index => $image)
-                                                                    <div class="relative">
-                                                                        <img src="{{ Storage::url($image) }}"
-                                                                            class="w-full h-20 object-cover rounded">
-                                                                        <button type="button"
-                                                                            wire:click="removeExistingImage({{ $index }})"
-                                                                            class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">
-                                                                            ×
-                                                                        </button>
-                                                                    </div>
-                                                                @endforeach
-                                                            </div>
+                                                            @if (!empty($updateNewsForm->existing_images) && count($updateNewsForm->existing_images) > 0)
+                                                                <div class="mt-2 grid grid-cols-3 gap-2">
+                                                                    @foreach ($updateNewsForm->existing_images as $index => $image)
+                                                                        <div class="relative">
+                                                                            <img src="{{ Storage::url($image) }}"
+                                                                                class="w-full h-20 object-cover rounded">
+                                                                            <button type="button"
+                                                                                wire:click="removeExistingImage({{ $index }})"
+                                                                                class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600">
+                                                                                ×
+                                                                            </button>
+                                                                        </div>
+                                                                    @endforeach
+                                                                </div>
+                                                            @else
+                                                                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                                                                    {{ __('Sin imágenes actualmente.') }}
+                                                                </p>
+                                                            @endif
                                                         </div>
 
                                                         <div>
-                                                            <flux:label>{{ __('Add New Images') }}</flux:label>
+                                                            <flux:label>{{ __('Agregar Nuevas Imágenes') }}</flux:label>
                                                             <input type="file"
-                                                                wire:model="updateNewsForm.new_images" multiple
+                                                                wire:model="updateNewsForm.new_images" 
+                                                                multiple
                                                                 accept="image/*"
                                                                 class="mt-2 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                                                            <flux:text class="mt-2 text-xs text-gray-500">
+                                                                {{ __('Máximo 10 imágenes, cada una menos de 2MB. Formatos: JPEG, PNG, GIF, WebP.') }}
+                                                            </flux:text>
+                                                            @error('updateNewsForm.new_images')
+                                                                <div class="mt-2 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded">
+                                                                    <p class="text-sm text-red-600 dark:text-red-400">
+                                                                        <strong>Error:</strong> {{ $message }}
+                                                                    </p>
+                                                                </div>
+                                                            @enderror
+                                                            @error('updateNewsForm.new_images.*')
+                                                                <div class="mt-2 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded">
+                                                                    <p class="text-sm text-red-600 dark:text-red-400">
+                                                                        <strong>Error en una imagen:</strong> {{ $message }}
+                                                                    </p>
+                                                                </div>
+                                                            @enderror
                                                         </div>
                                                     </div>
                                                 </div>
@@ -383,12 +407,26 @@
 
                     <div class="space-y-4">
                         <div>
-                            <flux:label>{{ __('Images (minimum 3 required)') }}</flux:label>
+                            <flux:label>{{ __('Images (optional)') }}</flux:label>
                             <input type="file" wire:model="images" multiple accept="image/*"
                                 class="mt-2 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
                             <flux:text class="mt-2 text-xs text-gray-500">
-                                {{ __('You must upload at least 3 images. Each image must be less than 2MB.') }}
+                                {{ __('Puedes subir imágenes opcionales. Máximo 10 imágenes, cada una menos de 2MB. Formatos: JPEG, PNG, GIF, WebP.') }}
                             </flux:text>
+                            @error('images')
+                                <div class="mt-2 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded">
+                                    <p class="text-sm text-red-600 dark:text-red-400">
+                                        <strong>Error de imágenes:</strong> {{ $message }}
+                                    </p>
+                                </div>
+                            @enderror
+                            @error('images.*')
+                                <div class="mt-2 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded">
+                                    <p class="text-sm text-red-600 dark:text-red-400">
+                                        <strong>Error en una imagen:</strong> {{ $message }}
+                                    </p>
+                                </div>
+                            @enderror
                         </div>
 
                         @if (!empty($images))

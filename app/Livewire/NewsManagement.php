@@ -113,8 +113,13 @@ class NewsManagement extends Component
         'paragraph' => 'required|string',
         'author_id' => 'required|exists:users,id',
         'category_id' => 'required|exists:categories,id',
-        'images' => 'nullable|array',
-        'images.*' => 'image|max:2048',
+        'images' => 'nullable|array|max:10',
+        'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+    ], [
+        'images.max' => 'Máximo 10 imágenes permitidas.',
+        'images.*.image' => 'Uno de los archivos no es una imagen válida.',
+        'images.*.mimes' => 'Las imágenes deben ser JPEG, PNG, GIF o WebP.',
+        'images.*.max' => 'Una o más imágenes exceden los 2MB de tamaño.',
     ]);
 
 
@@ -159,7 +164,7 @@ class NewsManagement extends Component
         $this->updateNewsForm->is_published = $news->is_published;
         $this->updateNewsForm->comments_enabled = $news->comments_enabled;
         $this->updateNewsForm->category_id = $news->category_id;
-        $this->updateNewsForm->existing_images = $news->images ?? [];
+        $this->updateNewsForm->existing_images = is_array($news->images) ? $news->images : ($news->images ? json_decode($news->images, true) : []);
         $this->updateNewsForm->new_images = [];
 
         Flux::modal("edit-news-{$news->id}")->show();
@@ -174,11 +179,14 @@ class NewsManagement extends Component
         $this->authorize('update', $news);
 
         // Handle new images
-        $allImages = $this->updateNewsForm->existing_images;
-        if (!empty($this->updateNewsForm->new_images)) {
+        $allImages = is_array($this->updateNewsForm->existing_images) ? $this->updateNewsForm->existing_images : [];
+        
+        if (!empty($this->updateNewsForm->new_images) && is_array($this->updateNewsForm->new_images)) {
             foreach ($this->updateNewsForm->new_images as $image) {
-                $path = $image->store('news-images', 'public');
-                $allImages[] = $path;
+                if (is_object($image) && method_exists($image, 'store')) {
+                    $path = $image->store('news-images', 'public');
+                    $allImages[] = $path;
+                }
             }
         }
 
